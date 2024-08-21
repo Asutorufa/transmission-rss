@@ -8,7 +8,7 @@ require (
 	github.com/hekmon/transmissionrpc/v3 v3.0.0
 	github.com/j-muller/go-torrent-parser v0.0.0-20211014072822-db02b4099054
 	github.com/stretchr/testify v1.9.0
-	go.etcd.io/bbolt v1.3.10
+	go.etcd.io/bbolt v1.3.11
 )
 
 require (
