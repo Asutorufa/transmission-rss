@@ -9,7 +9,7 @@ require (
 	github.com/j-muller/go-torrent-parser v0.0.0-20211014072822-db02b4099054
 	github.com/stretchr/testify v1.10.0
 	go.etcd.io/bbolt v1.3.11
-	golang.org/x/sync v0.10.0
+	golang.org/x/sync v0.11.0
 )
 
 require (
