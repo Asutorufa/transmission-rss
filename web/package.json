@@ -14,7 +14,7 @@
     "@types/react-dom": "^19.0.3",
     "framer-motion": "^12.4.2",
     "next": "15.1.5",
-    "swr": "^2.2.5"
+    "swr": "^2.3.2"
   },
   "devDependencies": {
     "@types/node": "^22",
