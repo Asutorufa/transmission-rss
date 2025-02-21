@@ -180,7 +180,7 @@ export default function Home() {
                   onInputChange={(e) => setConfig({ ...config, download_dir: e })}
                 >
                   {[...new Set(data.map((rss) => path.basename(rss.download_dir).includes("Season ") ? path.dirname(path.dirname(rss.download_dir)) : path.dirname(rss.download_dir)))].map((value) => (
-                    <AutocompleteItem key={value} value={value}>
+                    <AutocompleteItem key={value}>
                       {value}
                     </AutocompleteItem>
                   ))}
