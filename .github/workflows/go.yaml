@@ -42,6 +42,7 @@ jobs:
             [linux, "amd64"],
             [linux, "amd64v3"],
             [linux, "arm64"],
+            [linux, "arm"],
             [darwin, "amd64"],
             [darwin, "amd64v3"],
             [darwin, "arm64"],
@@ -72,6 +73,7 @@ jobs:
           GOOS: ${{ matrix.env[0] }}
           GOARCH: ${{ matrix.env[1] == 'amd64v3' && 'amd64' || matrix.env[1] }}
           GOAMD64: ${{ matrix.env[1] == 'amd64v3' && 'v3' || '' }}
+          GOARM: ${{ matrix.env[1] == 'arm' && '7' || '' }}
         run: |
           make ${{ matrix.cmd }}
 
@@ -81,3 +83,70 @@ jobs:
           name: ${{ matrix.cmd }}_${{ matrix.env[0] }}_${{ matrix.env[1] }}
           path: |
             ${{ matrix.cmd }}${{ matrix.env[0] == 'windows' && '.exe' || '' }}
+
+  docker:
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      packages: write
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: ./
+          pattern: transmission-rss_linux_*
+          merge-multiple: false
+      - name: Info
+        id: info
+        run: |
+          mkdir -p temp
+          for i in transmission-rss_linux*/; do
+            mv ${i}transmission-rss temp/${i%%/}
+          done
+          rm -rf transmission-rss_linux*
+          mv temp/transmission-rss_linux* ./
+          chmod +x transmission-rss_linux*
+          echo "build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+          echo "vcs_ref=$(git rev-parse --short HEAD)"  >> $GITHUB_OUTPUT
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest,enable=true
+            type=raw,value={{date 'YYYY-MM-DD'}},enable=true
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          cache-from: type=gha,scope=docker-release
+          cache-to: type=gha,mode=max,scope=docker-release
+          build-args: |
+            BUILD_DATE=${{ steps.info.outputs.build_date }}
+            VCS_REF=${{ steps.info.outputs.vcs_ref }}
