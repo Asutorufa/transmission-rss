@@ -25,8 +25,8 @@ func NewJob(tr *Transmission, cache Cache) *Job {
 
 func (j *Job) Running() bool { return j.runJob.Load() }
 
-func (j *Job) Start(ctx context.Context, notify chan struct{}, getConfig func() *Config) error {
-	ticker := time.NewTicker(time.Hour)
+func (j *Job) Start(ctx context.Context, notify chan struct{}, getConfig func() *Config, updateInterval int) error {
+	ticker := time.NewTicker(time.Minute * time.Duration(updateInterval))
 	defer ticker.Stop()
 
 	for {
@@ -96,6 +96,12 @@ func (j *Job) DoOne(config *Config) {
 				slog.Error("parse rss failed", "err", err, "url", v.Url, "name", v.Name)
 				return
 			}
+
+			n_items := 0
+			for _, ch := range chs {
+				n_items += len(ch.Items)
+			}
+			slog.Info(fmt.Sprintf("parse rss url: %s name: %s items: %d", v.Url, v.Name, n_items))
 
 			ch <- Result{
 				channels: chs,

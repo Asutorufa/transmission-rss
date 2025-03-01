@@ -28,6 +28,7 @@ func main() {
 	configType := flag.String("config-type", "toml", "config type, json or toml")
 	rpc := flag.String("rpc", "http://127.0.0.1:9091/transmission/rpc", "transmission rpc url")
 	lishost := flag.String("host", ":9093", "listen host")
+	updateInterval := flag.Int("update", 60, "interval between updating rss in minutes")
 	flag.Parse()
 
 	configFullPath = filepath.Join(*path, "config.toml")
@@ -56,7 +57,7 @@ func main() {
 	defer cancel()
 
 	go func() {
-		if err := job.Start(ctx, ch, config.Load); err != nil {
+		if err := job.Start(ctx, ch, config.Load, *updateInterval); err != nil {
 			slog.Error("job start failed", "err", err)
 		}
 	}()
