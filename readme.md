@@ -38,6 +38,7 @@ download_after = 1717077480
 expire_time = 1717077480
 disabled = true
 fetch_interval = 1000 # units: ms
+label = ["tv-sonarr"]
 
 [[rss]]
 name = "rss2"
@@ -62,7 +63,11 @@ exclude_regexp = ["\\(Baha"]
             "exclude_regexp":  [
                 "\\(Baha"
             ],
-            "download_after": 1717077480
+            "download_after": 1717077480,
+            "fetch_interval": 1000,
+            "label": [
+                "tv-sonarr"
+            ]
         },
         {
             "name": "rss2",

@@ -77,6 +77,7 @@ type RSS struct {
 	DownloadAfter int64    `json:"download_after,omitempty" toml:"download_after"`
 	ExpireTime    int64    `json:"expire_time,omitempty" toml:"expire_time"`
 	FetchInterval int64    `json:"fetch_interval,omitempty" toml:"fetch_interval"`
+	Label         []string `json:"label,omitempty" toml:"label"`
 
 	regexp        regexps
 	excludeRegexp regexps
@@ -169,15 +170,16 @@ type Config struct {
 }
 
 type Torrent interface {
-	AddPayload(downloadDir string) transmissionrpc.TorrentAddPayload
+	AddPayload(downloadDir string, labels []string) transmissionrpc.TorrentAddPayload
 }
 
 type TorrentHash string
 
-func (th TorrentHash) AddPayload(downloadDir string) transmissionrpc.TorrentAddPayload {
+func (th TorrentHash) AddPayload(downloadDir string, labels []string) transmissionrpc.TorrentAddPayload {
 	return transmissionrpc.TorrentAddPayload{
 		DownloadDir: &downloadDir,
 		Filename:    (*string)(&th),
+		Labels:      labels,
 	}
 }
 
@@ -186,11 +188,12 @@ type TorrentFile struct {
 	Bytes   []byte
 }
 
-func (tr *TorrentFile) AddPayload(downloadDir string) transmissionrpc.TorrentAddPayload {
+func (tr *TorrentFile) AddPayload(downloadDir string, labels []string) transmissionrpc.TorrentAddPayload {
 	str := base64.StdEncoding.EncodeToString(tr.Bytes)
 	return transmissionrpc.TorrentAddPayload{
 		DownloadDir: &downloadDir,
 		MetaInfo:    &str,
+		Labels:      labels,
 	}
 }
 

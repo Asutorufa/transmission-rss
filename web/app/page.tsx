@@ -22,6 +22,7 @@ type RSS = {
   download_after?: number;
   expire_time?: number;
   fetch_interval?: number;
+  label?: string[];
 }
 
 const emptyConfig: RSS = {
@@ -42,6 +43,7 @@ export default function Home() {
   const [isPopoverOpen, setIsPopoverOpen] = useState<{ [key: number]: boolean }>({});
   const [newRegexp, setNewRegexp] = useState("");
   const [newExcludeRegexp, setNewExcludeRegexp] = useState("");
+  const [newLabel, setNewLabel] = useState("");
   const [saving, setSaving] = useState(false);
 
   const [originalConfig, setOriginalConfig] = useState<RSS>(emptyConfig)
@@ -312,6 +314,64 @@ export default function Home() {
                     else setConfig({ ...config, fetch_interval: interval })
                   }}
                 />
+                <Card style={{ overflow: "visible" }}>
+                  <CardHeader>Label</CardHeader>
+                  <CardBody>
+                    {
+                      (!config.label || config.label.length === 0) && (
+                        <div className="text-gray-400 text-center">Empty</div>
+                      )
+                    }
+                    {
+                      config.label?.map((r, i) => {
+                        return <div key={i}>
+                          <Input
+                            className={i === 0 ? "" : "mt-2"}
+                            value={r}
+                            onChange={(e) => {
+                              const label = config.label ? [...config.label] : [];
+                              label[i] = e.target.value;
+                              setConfig({ ...config, label });
+                            }}
+                            endContent={
+                              <button
+                                className="focus:outline-none"
+                                onClick={() => {
+                                  const label = config.label ? [...config.label] : [];
+                                  label.splice(i, 1);
+                                  setConfig({ ...config, label });
+                                }}
+                              >
+                                <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                  <DeleteIcon />
+                                </span>
+                              </button>
+                            }
+                          />
+                        </div>
+                      })
+                    }
+                  </CardBody>
+                  <CardFooter>
+                    <Input
+                      value={newLabel}
+                      onChange={(e) => setNewLabel(e.target.value)}
+                      endContent={
+                        <button
+                          className="focus:outline-none"
+                          onClick={() => {
+                            if (!newLabel) return;
+                            const label = config.label ? [...config.label] : [];
+                            label.push(newLabel);
+                            setConfig({ ...config, label });
+                          }}
+                        >
+                          <PlusIcon />
+                        </button>
+                      }
+                    />
+                  </CardFooter>
+                </Card>
                 <DatePicker
                   label="Download After"
                   inert={false}

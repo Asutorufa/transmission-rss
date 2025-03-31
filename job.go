@@ -151,7 +151,7 @@ func (j *Job) Process(v *RSS, item Item) error {
 		return fmt.Errorf("get torrent failed: %w", err)
 	}
 
-	err = j.tr.Add(context.TODO(), tr, v.DownloadDir)
+	err = j.tr.Add(context.TODO(), tr, v.DownloadDir, v.Label)
 	if err != nil {
 		return fmt.Errorf("add torrent failed: %w", err)
 	}
