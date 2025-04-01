@@ -3,7 +3,7 @@ module github.com/Asutorufa/transmission-rss
 go 1.24
 
 require (
-	github.com/BurntSushi/toml v1.4.0
+	github.com/BurntSushi/toml v1.5.0
 	github.com/fsnotify/fsnotify v1.8.0
 	github.com/hekmon/transmissionrpc/v3 v3.0.0
 	github.com/j-muller/go-torrent-parser v0.0.0-20211014072822-db02b4099054
