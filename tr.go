@@ -27,7 +27,12 @@ func NewTransmission(rpcUrl string) (*Transmission, error) {
 	}, nil
 }
 
-func (t *Transmission) Add(ctx context.Context, files Torrent, downloadDir string, label []string) error {
-	_, err := t.cli.TorrentAdd(context.TODO(), files.AddPayload(downloadDir, label))
+type AddArgs struct {
+	DownloadDir string
+	Labels      []string
+}
+
+func (t *Transmission) Add(ctx context.Context, files *Torrent, args AddArgs) error {
+	_, err := t.cli.TorrentAdd(ctx, files.ToAddPayload(args))
 	return err
 }

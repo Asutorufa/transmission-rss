@@ -14,6 +14,7 @@ import (
 
 	"github.com/hekmon/transmissionrpc/v3"
 	gtp "github.com/j-muller/go-torrent-parser"
+	"github.com/samber/lo"
 )
 
 type Channel struct {
@@ -32,9 +33,11 @@ type Item struct {
 	PubDate     time.Time
 }
 
-func (i *Item) Get(ctx context.Context) (Torrent, error) {
+func (i *Item) Get(ctx context.Context) (*Torrent, error) {
 	if strings.HasPrefix(i.Url, "magnet:?xt=") {
-		return TorrentHash(i.Url), nil
+		return &Torrent{
+			TorrentHash: lo.ToPtr(TorrentHash(i.Url)),
+		}, nil
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", i.Url, nil)
@@ -63,7 +66,9 @@ func (i *Item) Get(ctx context.Context) (Torrent, error) {
 		return nil, fmt.Errorf("parse torrent failed: %w, data: %s", err, data)
 	}
 
-	return tr, nil
+	return &Torrent{
+		TorrentFile: tr,
+	}, nil
 }
 
 type RSS struct {
@@ -169,17 +174,28 @@ type Config struct {
 	Rss []*RSS `json:"rss,omitempty" toml:"rss"`
 }
 
-type Torrent interface {
-	AddPayload(downloadDir string, labels []string) transmissionrpc.TorrentAddPayload
+type Torrent struct {
+	TorrentHash *TorrentHash `json:"torrent_hash,omitempty" toml:"torrent_hash"`
+	TorrentFile *TorrentFile `json:"torrent_file,omitempty" toml:"torrent_file"`
+}
+
+func (t *Torrent) ToAddPayload(args AddArgs) transmissionrpc.TorrentAddPayload {
+	if t.TorrentHash != nil {
+		return t.TorrentHash.ToAddPayload(args)
+	} else if t.TorrentFile != nil {
+		return t.TorrentFile.ToAddPayload(args)
+	}
+
+	return transmissionrpc.TorrentAddPayload{}
 }
 
 type TorrentHash string
 
-func (th TorrentHash) AddPayload(downloadDir string, labels []string) transmissionrpc.TorrentAddPayload {
+func (th TorrentHash) ToAddPayload(args AddArgs) transmissionrpc.TorrentAddPayload {
 	return transmissionrpc.TorrentAddPayload{
-		DownloadDir: &downloadDir,
+		DownloadDir: &args.DownloadDir,
 		Filename:    (*string)(&th),
-		Labels:      labels,
+		Labels:      args.Labels,
 	}
 }
 
@@ -188,12 +204,12 @@ type TorrentFile struct {
 	Bytes   []byte
 }
 
-func (tr *TorrentFile) AddPayload(downloadDir string, labels []string) transmissionrpc.TorrentAddPayload {
+func (tr *TorrentFile) ToAddPayload(args AddArgs) transmissionrpc.TorrentAddPayload {
 	str := base64.StdEncoding.EncodeToString(tr.Bytes)
 	return transmissionrpc.TorrentAddPayload{
-		DownloadDir: &downloadDir,
+		DownloadDir: &args.DownloadDir,
 		MetaInfo:    &str,
-		Labels:      labels,
+		Labels:      args.Labels,
 	}
 }
 

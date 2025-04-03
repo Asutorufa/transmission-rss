@@ -39,7 +39,7 @@ func (j *Job) Start(ctx context.Context, notify chan struct{}, getConfig func() 
 			j.Do(getConfig)
 		case <-notify:
 			j.Do(getConfig)
-			ticker.Reset(time.Hour)
+			ticker.Reset(time.Minute * time.Duration(updateInterval))
 		}
 	}
 }
@@ -91,7 +91,7 @@ func (j *Job) DoOne(config *Config) {
 
 			time.Sleep(time.Millisecond * time.Duration(v.FetchInterval))
 
-			ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 			chs, err := ParseUrl(ctx, v.Url)
 			cancel()
 			if err != nil {
@@ -118,7 +118,7 @@ func (j *Job) DoOne(config *Config) {
 
 		for _, ch := range chs {
 			for _, item := range ch.Items {
-				if err := j.Process(v, item); err != nil {
+				if err := j.Process(context.TODO(), v, item); err != nil {
 					slog.Error("process item failed", "url", item.Url, "name", v.Name, "err", err)
 				}
 			}
@@ -126,7 +126,7 @@ func (j *Job) DoOne(config *Config) {
 	}
 }
 
-func (j *Job) Process(v *RSS, item Item) error {
+func (j *Job) Process(ctx context.Context, v *RSS, item Item) error {
 	if !v.MatchDate(item.PubDate) {
 		return nil
 	}
@@ -135,8 +135,7 @@ func (j *Job) Process(v *RSS, item Item) error {
 		return nil
 	}
 
-	_, ok := j.cache.Load(v.Url, item.Url)
-	if ok {
+	if ok := j.cache.Exist(v.Url, item.Url); ok {
 		return nil
 	}
 
@@ -144,14 +143,17 @@ func (j *Job) Process(v *RSS, item Item) error {
 		time.Sleep(time.Duration(v.FetchInterval) * time.Millisecond)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
-	tr, err := item.Get(ctx)
+	getctx, cancel := context.WithTimeout(ctx, 45*time.Second)
+	tr, err := item.Get(getctx)
 	cancel()
 	if err != nil {
 		return fmt.Errorf("get torrent failed: %w", err)
 	}
 
-	err = j.tr.Add(context.TODO(), tr, v.DownloadDir, v.Label)
+	err = j.tr.Add(ctx, tr, AddArgs{
+		DownloadDir: v.DownloadDir,
+		Labels:      v.Label,
+	})
 	if err != nil {
 		return fmt.Errorf("add torrent failed: %w", err)
 	}
