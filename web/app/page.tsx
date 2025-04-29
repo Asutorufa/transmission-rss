@@ -209,7 +209,7 @@ export default function Home() {
                             }}
                             endContent={
                               <button
-                                className="focus:outline-none"
+                                className="focus:outline-hidden"
                                 onClick={() => {
                                   const regexp = config.regexp ? [...config.regexp] : [];
                                   regexp.splice(i, 1);
@@ -232,7 +232,7 @@ export default function Home() {
                       onChange={(e) => setNewRegexp(e.target.value)}
                       endContent={
                         <button
-                          className="focus:outline-none"
+                          className="focus:outline-hidden"
                           onClick={() => {
                             if (!newRegexp) return;
                             const regexp = config.regexp ? [...config.regexp] : [];
@@ -267,7 +267,7 @@ export default function Home() {
                             }}
                             endContent={
                               <button
-                                className="focus:outline-none"
+                                className="focus:outline-hidden"
                                 onClick={() => {
                                   const regexp = config.exclude_regexp ? [...config.exclude_regexp] : [];
                                   regexp.splice(i, 1);
@@ -290,7 +290,7 @@ export default function Home() {
                       onChange={(e) => setNewExcludeRegexp(e.target.value)}
                       endContent={
                         <button
-                          className="focus:outline-none"
+                          className="focus:outline-hidden"
                           onClick={() => {
                             if (!newExcludeRegexp) return;
                             const regexp = config.exclude_regexp ? [...config.exclude_regexp] : [];
@@ -335,7 +335,7 @@ export default function Home() {
                             }}
                             endContent={
                               <button
-                                className="focus:outline-none"
+                                className="focus:outline-hidden"
                                 onClick={() => {
                                   const label = config.label ? [...config.label] : [];
                                   label.splice(i, 1);
@@ -358,7 +358,7 @@ export default function Home() {
                       onChange={(e) => setNewLabel(e.target.value)}
                       endContent={
                         <button
-                          className="focus:outline-none"
+                          className="focus:outline-hidden"
                           onClick={() => {
                             if (!newLabel) return;
                             const label = config.label ? [...config.label] : [];
@@ -468,7 +468,7 @@ export default function Home() {
 
 
                     <Tooltip content="Edit">
-                      <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={(e) => { openModal(i, rss); }}>
+                      <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { openModal(i, rss); }}>
                         <EditIcon />
                       </span>
                     </Tooltip>

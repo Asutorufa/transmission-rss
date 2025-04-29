@@ -2,6 +2,7 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,20 +10,21 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroui/react": "^2.7.4",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
-    "framer-motion": "^12.4.7",
-    "next": "^15.2.0",
+    "@heroui/react": "^2.8.0-beta.2",
+    "@tailwindcss/postcss": "^4.1.4",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "framer-motion": "^12.9.2",
+    "next": "^15.3.1",
     "swr": "^2.3.2"
   },
   "devDependencies": {
     "@types/node": "^22.13.8",
     "autoprefixer": "^10.4.20",
-    "eslint": "^9.21.0",
-    "eslint-config-next": "15.2.4",
+    "eslint": "^9.25.1",
+    "eslint-config-next": "15.3.1",
     "postcss": "^8.5.3",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.2"
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.8.3"
   }
 }
