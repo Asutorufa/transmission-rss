@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -x
+
+# gh run download 10269193323
+for file in ${PWD}/*;do
+    if [ ! -d "$file" ]; then
+        continue
+    fi
+
+    suffix=""
+    if [[ $file =~ "windows" ]]; then
+        suffix=".exe"
+    fi
+
+    if [ ! -f "${file}/transmission-rss${suffix}" ]; then
+        continue
+    fi
+
+    mv $file ${file}_
+    mv ${file}_/transmission-rss${suffix} ${file}${suffix}
+    rm -rf ${file}_
+done

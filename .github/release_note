@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -x
+
+CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+
+if [ -n "$CURRENT_TAG" ]; then
+  PREV_TAG=$(git describe --tags --abbrev=0 --exclude="$CURRENT_TAG" 2>/dev/null)
+fi
+
+if [ -z "$CURRENT_TAG" ]; then
+  git log --oneline
+elif [ -z "$PREV_TAG" ]; then
+  git log "$CURRENT_TAG" --oneline
+else
+  git log "$PREV_TAG..$CURRENT_TAG"  --oneline
+fi
