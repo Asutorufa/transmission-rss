@@ -10,8 +10,6 @@ fi
 
 if [ -z "$CURRENT_TAG" ]; then
   git log --oneline
-elif [ -z "$PREV_TAG" ]; then
-  git log "$CURRENT_TAG" --oneline
 else
-  git log "$PREV_TAG..$CURRENT_TAG"  --oneline
+  git log $(git describe --tags --abbrev=0 --exclude=$(git describe --tags))..$(git describe --tags) --oneline
 fi
