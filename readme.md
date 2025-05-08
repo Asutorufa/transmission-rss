@@ -28,6 +28,11 @@ put config in config dir, config type can be json or toml, config file name:
 #### config.toml
 
 ```toml
+[telegram_bot]
+token = "xxx:xxxxxx"
+# chat_id or user_id
+chat_id = 000000
+
 [[rss]]
 name = "rss1"
 url = "https://example.com/RSS1"
@@ -51,7 +56,11 @@ exclude_regexp = ["\\(Baha"]
 #### config.json
 
 ```json
-{
+{  
+    "telegram_bot": {
+        "token": "xxx:xxxx",
+        "chat_id": 0000
+    },
     "rss": [
         {
             "name": "rss1",

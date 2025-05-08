@@ -8,8 +8,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/BurntSushi/toml"
 )
@@ -19,6 +21,16 @@ var configMu sync.RWMutex
 var configFullPath string
 var ch = make(chan struct{})
 var job *Job
+
+var ENV_TELEGRAM_BOT_TOKEN = os.Getenv("TELEGRAM_BOT_TOKEN")
+var ENV_TELEGRAM_BOT_CHAT_ID = func() int64 {
+	str := os.Getenv("TELEGRAM_BOT_CHAT_ID")
+	if str == "" {
+		return 0
+	}
+	i, _ := strconv.ParseInt(str, 10, 64)
+	return i
+}()
 
 var unmarshalConfig = toml.Unmarshal
 var marshalConfig = toml.Marshal
@@ -52,6 +64,33 @@ func main() {
 	}
 
 	job = NewJob(tr, cache)
+
+	cf := config.Load()
+	if cf.TelegramBot != nil {
+		if ENV_TELEGRAM_BOT_TOKEN == "" {
+			ENV_TELEGRAM_BOT_TOKEN = cf.TelegramBot.Token
+		}
+		if ENV_TELEGRAM_BOT_CHAT_ID == 0 {
+			ENV_TELEGRAM_BOT_CHAT_ID = cf.TelegramBot.ChatID
+		}
+	}
+
+	if ENV_TELEGRAM_BOT_TOKEN != "" {
+		go func() {
+			for {
+				job.tgbot, err = newBot(ENV_TELEGRAM_BOT_TOKEN, ENV_TELEGRAM_BOT_CHAT_ID)
+				if err != nil {
+					slog.Error("new telegram bot failed", "err", err)
+					time.Sleep(time.Second * 3)
+					continue
+				}
+
+				slog.Info("new telegram bot success")
+				_ = job.tgbot.SendMessage("start run new transmission rss process")
+				break
+			}
+		}()
+	}
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
