@@ -171,7 +171,13 @@ func (r *RSS) Match(title string) bool {
 }
 
 type Config struct {
-	Rss []*RSS `json:"rss,omitempty" toml:"rss"`
+	TelegramBot *TelegramBot `json:"telegram_bot,omitempty" toml:"telegram_bot"`
+	Rss         []*RSS       `json:"rss,omitempty" toml:"rss"`
+}
+
+type TelegramBot struct {
+	Token  string `json:"token,omitempty" toml:"token"`
+	ChatID int64  `json:"chat_id,omitempty" toml:"chat_id"`
 }
 
 type Torrent struct {

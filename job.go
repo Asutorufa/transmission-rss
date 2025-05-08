@@ -16,6 +16,7 @@ type Job struct {
 	tr     *Transmission
 	cache  Cache
 	runJob atomic.Bool
+	tgbot  *Bot
 }
 
 func NewJob(tr *Transmission, cache Cache) *Job {
@@ -159,6 +160,13 @@ func (j *Job) Process(ctx context.Context, v *RSS, item Item) error {
 	}
 
 	slog.Info("add torrent", "url", item.Url, "name", item.Title)
+
+	if j.tgbot != nil {
+		err = j.tgbot.SendMessage(fmt.Sprintf("add new torrent:\n%s\n%s", item.Title, item.Url))
+		if err != nil {
+			slog.Error("send tgbot message failed", "err", err)
+		}
+	}
 
 	err = j.cache.Store(v.Url, item.Url, tr)
 	if err != nil {

@@ -35,6 +35,10 @@ func TestParse(t *testing.T) {
 
 func TestConfig(t *testing.T) {
 	cf := Config{
+		TelegramBot: &TelegramBot{
+			Token:  "token",
+			ChatID: 123,
+		},
 		Rss: []*RSS{
 			{
 				Name:          "test",
