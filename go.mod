@@ -9,8 +9,8 @@ require (
 	github.com/hekmon/transmissionrpc/v3 v3.0.0
 	github.com/j-muller/go-torrent-parser v0.0.0-20211014072822-db02b4099054
 	github.com/samber/lo v1.51.0
-	github.com/stretchr/testify v1.10.0
-	go.etcd.io/bbolt v1.4.2
+	github.com/stretchr/testify v1.11.1
+	go.etcd.io/bbolt v1.4.3
 )
 
 require (
