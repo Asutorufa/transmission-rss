@@ -67,7 +67,7 @@ jobs:
           key: cache-web-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           check-latest: true
           go-version-file: "go.mod"
