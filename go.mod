@@ -8,7 +8,7 @@ require (
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/hekmon/transmissionrpc/v3 v3.0.0
 	github.com/j-muller/go-torrent-parser v0.0.0-20211014072822-db02b4099054
-	github.com/samber/lo v1.51.0
+	github.com/samber/lo v1.52.0
 	github.com/stretchr/testify v1.11.1
 	go.etcd.io/bbolt v1.4.3
 )
