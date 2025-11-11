@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardFooter, CardHeader, Chip, DatePicker, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Spinner, Switch, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea, Tooltip, useDisclosure } from "@heroui/react";
 import { fromDate, getLocalTimeZone, ZonedDateTime } from "@internationalized/date";
