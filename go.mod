@@ -3,7 +3,7 @@ module github.com/Asutorufa/transmission-rss
 go 1.24
 
 require (
-	github.com/BurntSushi/toml v1.5.0
+	github.com/BurntSushi/toml v1.6.0
 	github.com/fsnotify/fsnotify v1.9.0
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/hekmon/transmissionrpc/v3 v3.0.0
