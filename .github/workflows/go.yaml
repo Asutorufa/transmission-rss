@@ -30,7 +30,7 @@ jobs:
 
       - name: Cache Web
         id: cache-web
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: web/out
           key: cache-web-${{ github.run_id }}-${{ github.run_attempt }}
@@ -61,7 +61,7 @@ jobs:
 
       - name: Cache Web
         id: cache-web
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: web/out
           key: cache-web-${{ github.run_id }}-${{ github.run_attempt }}
