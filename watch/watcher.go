@@ -36,6 +36,8 @@ func WatchConfig(ctx context.Context, file string, do func()) error {
 		do()
 	})
 
+	defer timer.Stop()
+
 	for {
 		select {
 		case <-ctx.Done():
