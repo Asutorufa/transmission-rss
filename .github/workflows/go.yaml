@@ -16,17 +16,29 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - name: Use Node.js 23.x
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v7
         with:
-          node-version: 23.x
-          cache: "npm"
-          cache-dependency-path: web/package-lock.json
+          node-version: 24.x
       - run: |
-          ls -la
           cd web
-          npm install
+          npm install --no-audit --no-fund
           npm run build
+
+      # One-time lockfile regeneration while migrating away from Next.js.
+      # Remove this step after the generated lockfile is committed.
+      - name: Commit generated Vite lockfile
+        if: github.event_name == 'pull_request' && github.head_ref == 'refactor/vite-radix-wouter'
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add web/package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(web): lock Vite dependencies"
+            git push origin HEAD:refs/heads/refactor/vite-radix-wouter
+          fi
 
       - name: Cache Web
         id: cache-web
@@ -34,6 +46,21 @@ jobs:
         with:
           path: web/out
           key: cache-web-${{ github.run_id }}-${{ github.run_attempt }}
+
+  test:
+    needs: [web]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Restore compiled frontend
+        uses: actions/cache@v6
+        with:
+          path: web/out
+          key: cache-web-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: go test ./...
 
   build:
     needs: [web]

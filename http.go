@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/fs"
 	"log/slog"
 	"net/http"
@@ -20,22 +19,12 @@ func cross(w http.ResponseWriter) {
 }
 
 func HandleFront(mux *http.ServeMux) {
-	ffs, err := fs.Sub(web.Page, "out")
-	if err != nil {
-		panic(err)
-	}
-
-	dirs, err := fs.Glob(ffs, "*")
-	if err != nil {
-		return
-	}
-
-	handler := http.FileServer(http.FS(ffs))
-
-	mux.Handle("GET /", handler)
-	for _, v := range dirs {
-		mux.Handle(fmt.Sprintf("GET %s/", v), handler)
-	}
+    ffs, err := fs.Sub(web.Page, "out")
+    if err != nil {
+        panic(err)
+    }
+    // "/" also serves Vite's /assets/* paths. No Next.js route map is needed.
+    mux.Handle("GET /", http.FileServer(http.FS(ffs)))
 }
 
 func route() http.Handler {
