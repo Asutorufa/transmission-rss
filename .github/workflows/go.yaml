@@ -16,16 +16,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - name: Use Node.js 23.x
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v7
         with:
-          node-version: 23.x
+          node-version: 24.x
           cache: "npm"
           cache-dependency-path: web/package-lock.json
       - run: |
-          ls -la
           cd web
-          npm install
+          npm ci --no-audit --no-fund
           npm run build
 
       - name: Cache Web
@@ -34,6 +33,22 @@ jobs:
         with:
           path: web/out
           key: cache-web-${{ github.run_id }}-${{ github.run_attempt }}
+
+  test:
+    needs: [web]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Restore compiled frontend
+        uses: actions/cache@v6
+        with:
+          path: web/out
+          key: cache-web-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: go test -v -timeout=2m ./...
 
   build:
     needs: [web]
@@ -131,6 +146,8 @@ jobs:
             artifacts/*/*
 
   docker:
+    # Never publish containers for pull requests.
+    if: github.event_name == 'push' && (github.ref_type == 'tag' || github.ref_name == 'main')
     needs: [build]
     runs-on: ubuntu-latest
     timeout-minutes: 120

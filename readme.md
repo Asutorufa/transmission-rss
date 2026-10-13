@@ -2,6 +2,22 @@
 
 ## build and run
 
+The Web UI is a Vite + React single-page app using Radix UI, Wouter and Tailwind CSS 4.
+The Go server serves the compiled `web/out` files via `go:embed`, so a frontend
+build is required before compiling the Go binary.
+
+```bash
+cd web
+npm install
+npm run build
+cd ..
+go test ./...
+```
+
+For frontend development, run `npm run dev` from `web/`; the Vite dev server
+proxies `/api` and `/start_job` to the Go backend on `127.0.0.1:9093`.
+
+
 ```bash
 go build -o main -v .
 # config type: json or toml, default toml
@@ -14,7 +30,7 @@ immidiately run once
 curl http://127.0.0.1:9093/start_job
 ```
 
-![screentshot](https://raw.githubusercontent.com/Asutorufa/transmission-rss/refs/heads/main/assets/screenshot.png)
+The management UI is served on the configured `-host` address (default: `http://127.0.0.1:9093/`).
 
 ## config dir
 
