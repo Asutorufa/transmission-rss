@@ -46,7 +46,9 @@ async function sendJSON(method: "PUT" | "PATCH" | "DELETE", payload: unknown) {
 function parentDir(path: string): string {
   const normalized = path.replace(/[\\/]+$/, "");
   const last = Math.max(normalized.lastIndexOf("/"), normalized.lastIndexOf("\\"));
-  return last < 0 ? "." : normalized.slice(0, last) || normalized[0];
+  if (last < 0) return ".";
+  if (last === 2 && /^[A-Za-z]:[\\/]/.test(normalized)) return normalized.slice(0, 3);
+  return normalized.slice(0, last) || normalized[0];
 }
 
 function suggestions(configs: RSS[]): string[] {
@@ -288,7 +290,7 @@ export function Dashboard() {
             {!data && !error ? <div className="empty-state">Loading feeds…</div> :
               feeds.length === 0 ? <div className="empty-state"><h3>No feeds yet</h3><p>Add an RSS feed to get started.</p><button className="button primary" onClick={openNew}><PlusIcon /> Add feed</button></div> :
               <div className="table-wrap"><table>
-                <thead><tr><th className="narrow">#</th><th>Name</th><th>Status</th><th>Download directory</th><th className="actions-col">Actions</th></tr></thead>
+                <thead><tr><th className="narrow">#</th><th>Name</th><th>Status</th><th className="download-col">Download directory</th><th className="actions-col">Actions</th></tr></thead>
                 <tbody>{feeds.map((rss, index) => (
                   <tr key={index}><td className="muted">{index + 1}</td><td><strong>{rss.name}</strong><span className="feed-url" title={rss.url}>{rss.url}</span></td>
                     <td><span className={"pill" + (rss.disabled ? " disabled" : " enabled")}><span className="pill-dot" />{rss.disabled ? "Disabled" : "Enabled"}</span></td>

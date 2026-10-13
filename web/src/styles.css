@@ -94,5 +94,5 @@ input[type="datetime-local"] { color-scheme: dark; }
 .tooltip { z-index: 50; color: #e2e8f0; background: #324359; font-size: 11px; padding: 6px 9px; border: 1px solid #51647b; border-radius: 6px; }
 .tooltip-arrow { fill: #324359; }
 .empty-page { text-align: center; padding: 100px 10px; }
-@media (max-width: 800px) { .hero { align-items: flex-start; flex-direction: column; } .container { padding-top: 30px; } .header-caption, .download-path { display: none; } }
+@media (max-width: 800px) { .hero { align-items: flex-start; flex-direction: column; } .container { padding-top: 30px; } .header-caption, .download-col, .download-path { display: none; } }
 @media (max-width: 540px) { .app-header { padding: 0 18px; } .container { padding: 28px 14px; } .hero-actions { width: 100%; } .form-grid { grid-template-columns: 1fr; } .dialog-heading { padding: 20px; } .form-scroll { padding: 20px; } .dialog-actions { padding: 15px 20px; } th, td { padding: 12px; } .feed-url { max-width: 155px; } .status { flex-shrink: 0; } }

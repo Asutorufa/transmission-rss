@@ -30,7 +30,7 @@ immidiately run once
 curl http://127.0.0.1:9093/start_job
 ```
 
-![screentshot](https://raw.githubusercontent.com/Asutorufa/transmission-rss/refs/heads/main/assets/screenshot.png)
+The management UI is served on the configured `-host` address (default: `http://127.0.0.1:9093/`).
 
 ## config dir
 
