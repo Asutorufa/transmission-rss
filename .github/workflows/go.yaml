@@ -37,6 +37,7 @@ jobs:
   test:
     needs: [web]
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
       - name: Restore compiled frontend
@@ -47,7 +48,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version-file: go.mod
-      - run: go test ./...
+      - run: go test -v -timeout=2m ./...
 
   build:
     needs: [web]
