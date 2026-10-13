@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Transmission RSS fixture</title>
+    <link>https://example.com/rss</link>
+    <description>Static feed for parser tests</description>
+    <item>
+      <title>(CR) Example release</title>
+      <link>https://example.com/test.torrent</link>
+      <description>Test release</description>
+      <enclosure url="https://example.com/test.torrent" length="1024" type="application/x-bittorrent" />
+      <pubDate>Mon, 13 Oct 2025 10:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
