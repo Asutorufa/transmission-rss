@@ -14,8 +14,12 @@ github.com/hashicorp/go-cleanhttp v0.5.2 h1:035FKYIWjmULyFRBKPs8TBQoi0x6d9G4xc9n
 github.com/hashicorp/go-cleanhttp v0.5.2/go.mod h1:kO/YDlP8L1346E6Sodw+PrpBSV4/SoxCXGY6BqNFT48=
 github.com/hekmon/cunits/v2 v2.1.0 h1:k6wIjc4PlacNOHwKEMBgWV2/c8jyD4eRMs5mR1BBhI0=
 github.com/hekmon/cunits/v2 v2.1.0/go.mod h1:9r1TycXYXaTmEWlAIfFV8JT+Xo59U96yUJAYHxzii2M=
+github.com/hekmon/cunits/v2 v2.1.1 h1:E7RWES+bIJX8SK8EO7WmQ9xz5SnXVZ43I04yDqIHU2g=
+github.com/hekmon/cunits/v2 v2.1.1/go.mod h1:9r1TycXYXaTmEWlAIfFV8JT+Xo59U96yUJAYHxzii2M=
 github.com/hekmon/transmissionrpc/v3 v3.0.0 h1:0Fb11qE0IBh4V4GlOwHNYpqpjcYDp5GouolwrpmcUDQ=
 github.com/hekmon/transmissionrpc/v3 v3.0.0/go.mod h1:38SlNhFzinVUuY87wGj3acOmRxeYZAZfrj6Re7UgCDg=
+github.com/hekmon/transmissionrpc/v3 v3.1.0 h1:cjnqloHeII7LGizfyJ5AnumpnzUoORVPP7pFxvLcz0k=
+github.com/hekmon/transmissionrpc/v3 v3.1.0/go.mod h1:4VGyWKWuLnhOHE5dBgzaTmOt/TZNTfG472IaZxNm0aU=
 github.com/j-muller/go-torrent-parser v0.0.0-20211014072822-db02b4099054 h1:74rPb7GmzJVJkSQ1Tpd7Y8iCnNveIjnpgyos4Yu4Gzs=
 github.com/j-muller/go-torrent-parser v0.0.0-20211014072822-db02b4099054/go.mod h1:mMeMpHRplLTgo3ttLVB8R43jtdEKcDpLVw2CvcwTv28=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
